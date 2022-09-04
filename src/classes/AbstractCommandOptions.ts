@@ -11,7 +11,6 @@ export default class AbstractCommandOptions implements IClonable, IIndexer {
         this.description = this.get("description", options)
         this.type = this.get("type", options);
         this.options = this.get("options", options)[0];
-        console.log(this.options, "\n\n\n\n\n\n\n\n")
     }
     public toJSON() {
         return this.name.map((name, index) => {

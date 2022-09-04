@@ -3,8 +3,10 @@ import {CommandData, CommandOptions, CommandOptionType} from "../interfaces/comm
 import AbstractCommandOptions from "./AbstractCommandOptions";
 import AbstractInject, {InjectType} from "./AbstractInject";
 import {commands} from "../handlers/slash";
+import EventListener from "./EventListener";
+import {EventEmitter} from "node:events";
 
-export class Command implements AbstractInject {
+export class Command implements AbstractInject, EventListener {
 	public name: string;
 	public description: string;
 	public options: AbstractCommandOptions | undefined;
@@ -13,6 +15,7 @@ export class Command implements AbstractInject {
 	public defaultPermission: PermissionResolvable;
 	public ownerOnly: boolean
 	public constructor(creator: CommandData) {
+		this.registerListener(this)
 		this.name = creator.name;
 		this.description = creator.description;
 		this.options = creator.options;
@@ -41,6 +44,16 @@ export class Command implements AbstractInject {
 		if (!instance) throw new Error(`Command ${i} does not exist!`)
 		instance.constructor.prototype[0] = s
 		commands.set(i, instance)
+	}
+	sendEvent(...args: any[]): void {
+		this.on(...args)
+	}
+	registerListener(e: Command) {
+
+	}
+
+	on(...args: any[]) {
+		throw new Error(`Command ${this.name} doesn't have an on method!`);
 	}
 }
 

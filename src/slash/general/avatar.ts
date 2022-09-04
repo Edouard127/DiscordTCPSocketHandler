@@ -8,43 +8,38 @@ import {
 	Interaction,
 	MessageActionRowComponentBuilder
 } from 'discord.js'
-import * as embed from "../../utils/embed"
-import {CommandOptions, CommandOptionType, SubCommandOptions} from "../../interfaces/commands/Command";
+import {CommandOptionType} from "../../interfaces/commands/Command";
 import {Command} from "../../classes/AbstractCommand";
 import {Context} from "../../interfaces/application/Context";
 import AbstractCommandOptions from "../../classes/AbstractCommandOptions";
-import AbstractInject, {InjectType} from "../../classes/AbstractInject";
 
 export default class SlashCommand extends Command {
 	constructor() {
-		super(
-			{
-				name: 'avatar',
-				description: "Get an avatar",
-				options: new AbstractCommandOptions([
-					{
-						name: "user",
-						description: "The user to get the avatar from",
-						type: CommandOptionType.SubCommand,
-						options: [
-							{
-								name: "get",
-								description: "The user to get the avatar from",
-								type: CommandOptionType.User,
-								required: true
-							}
-						]
-					},
-					{
-						name: "server",
-						description: "Get the server's icon",
-						type: CommandOptionType.SubCommand,
-						options: [
-
-						]
-					}
-				])
-			});
+		super({
+			name: 'avatar',
+			description: "Get an avatar",
+			options: new AbstractCommandOptions([
+				{
+					name: "user",
+					description: "The user to get the avatar from",
+					type: CommandOptionType.SubCommand,
+					options: [
+						{
+							name: "get",
+							description: "The user to get the avatar from",
+							type: CommandOptionType.User,
+							required: true
+						}
+					]
+				},
+				{
+					name: "server",
+					description: "Get the server's icon",
+					type: CommandOptionType.SubCommand,
+					options: []
+				}
+			])
+        });
 		this.filePath = __filename;
 	}
 
