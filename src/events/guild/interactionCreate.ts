@@ -1,5 +1,5 @@
 import {EmbedBuilder} from "discord.js";
-import { commands } from '../../slash'
+import { commands } from '../../handlers/slash'
 import ms from 'ms'
 import * as embed from "../../utils/embed";
 import {Context} from "../../interfaces/application/Context";
@@ -8,7 +8,8 @@ const Timeout = new Set()
 export default class {
   constructor(ctx: Context) {
 	  if (ctx.isChatInputCommand()) {
-		  const command = commands.getOrNull(ctx.commandName)
+		  const command = commands.getAnyOrNull(ctx.commandName)
+		  console.log(command)
 		  if(!command) return
 		  if (!ctx.guild) return;
 		  try {

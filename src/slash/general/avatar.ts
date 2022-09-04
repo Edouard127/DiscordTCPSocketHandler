@@ -15,23 +15,31 @@ import {Context} from "../../interfaces/application/Context";
 
 export default class Command extends SlashCommand {
 	constructor() {
-		super({
-			name: 'avatar',
-			description: "Get an avatar",
-			type: CommandOptionType.SubCommand,
-			options: [
-				{
-					name: "user",
-					description: "The user to get the avatar from",
-					type: CommandOptionType.User,
-					required: false
-				}
-			]
-		});
+		super([
+			{
+				name: 'avatar',
+				description: "Get an avatar",
+				type: CommandOptionType.SubCommand,
+				options: [
+					{
+						name: "user",
+						description: "The user to get the avatar from",
+						type: CommandOptionType.User,
+						required: false
+					},
+				]
+			},
+			{
+				name: 'server',
+				description: "Get the server's icon",
+				type: CommandOptionType.SubCommand,
+				options: []
+			}]);
 		this.filePath = __filename;
 	}
 
 	async run(ctx: Context): Promise<any> {
+		console.log(ctx)
 		if (!ctx.isChatInputCommand() || !ctx.inGuild() || !ctx.isCommand()) return
 		switch (ctx.options.getSubcommand()) {
 			case "user": {

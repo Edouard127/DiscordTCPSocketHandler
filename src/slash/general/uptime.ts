@@ -5,12 +5,14 @@ import {Context} from "../../interfaces/application/Context";
 
 export default class Command extends SlashCommand {
     constructor() {
-        super({
-            name: 'uptime',
-            description: "Get the uptime of the bot",
-            type: CommandOptionType.SubCommand,
-            options: [],
-        });
+        super([
+            {
+                name: 'uptime',
+                description: "Get the uptime of the bot",
+                type: CommandOptionType.SubCommand,
+                options: [],
+            }
+        ]);
         this.filePath = __filename;
     }
     async run(ctx: Context): Promise<any> {
