@@ -1,18 +1,14 @@
-import {SlashCommand} from "../../classes/AbstractSlashCommand";
-import {CommandData, CommandOptionType} from "../../interfaces/commands/Command";
+import {Command} from "../../classes/AbstractCommand";
+import {CommandOptionType} from "../../interfaces/commands/Command";
 import {EmbedBuilder} from "discord.js";
 import {Context} from "../../interfaces/application/Context";
 
-export default class Command extends SlashCommand {
+export default class SlashCommand extends Command {
     constructor() {
-        super([
-            {
+        super({
                 name: 'uptime',
                 description: "Get the uptime of the bot",
-                type: CommandOptionType.SubCommand,
-                options: [],
-            }
-        ]);
+            });
         this.filePath = __filename;
     }
     async run(ctx: Context): Promise<any> {

@@ -9,32 +9,46 @@ import {
 	MessageActionRowComponentBuilder
 } from 'discord.js'
 import * as embed from "../../utils/embed"
-import {CommandOptionType} from "../../interfaces/commands/Command";
-import {SlashCommand} from "../../classes/AbstractSlashCommand";
+import {CommandOptions, CommandOptionType} from "../../interfaces/commands/Command";
+import {Command} from "../../classes/AbstractCommand";
 import {Context} from "../../interfaces/application/Context";
+import AbstractCommandOptions from "../../classes/AbstractCommandOptions";
 
-export default class Command extends SlashCommand {
+export default class SlashCommand extends Command {
 	constructor() {
-		super([
+		super(
 			{
 				name: 'avatar',
 				description: "Get an avatar",
-				type: CommandOptionType.SubCommand,
-				options: [
+				options: new AbstractCommandOptions([
 					{
 						name: "user",
 						description: "The user to get the avatar from",
-						type: CommandOptionType.User,
-						required: true
+						type: CommandOptionType.SubCommand,
+						options: [
+							{
+								name: "user",
+								description: "The user to get the avatar from",
+								type: CommandOptionType.User,
+								required: true
+							}
+						]
 					},
-				]
-			},
-			{
-				name: 'server',
-				description: "Get the server's icon",
-				type: CommandOptionType.SubCommand,
-				options: []
-			}]);
+					{
+						name: "server",
+						description: "Get the server's icon",
+						type: CommandOptionType.SubCommand,
+						options: [
+							{
+								name: "server",
+								description: "Get the server's icon",
+								type: CommandOptionType.String,
+								required: true,
+							}
+						]
+					}
+				])
+			});
 		this.filePath = __filename;
 	}
 

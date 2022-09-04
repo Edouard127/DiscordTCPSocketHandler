@@ -1,16 +1,22 @@
 import {PermissionResolvable} from "discord.js";
+import AbstractCommandOptions from "../../classes/AbstractCommandOptions";
 
 export interface CommandOptions {
     name: string;
     description: string;
     type: CommandOptionType;
-    required?: boolean;
+    options?: SubCommandOptions[] | undefined;
+}
+export interface SubCommandOptions {
+    name: string;
+    description: string;
+    type: CommandOptionType;
+    required: boolean | undefined;
 }
 export interface CommandData {
     name: string;
     description: string;
-    options: CommandOptions[];
-    type: CommandOptionType;
+    options?: AbstractCommandOptions | undefined;
     filePath?: string;
     timeout?: number;
     defaultPermission?: PermissionResolvable;

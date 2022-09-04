@@ -2,12 +2,12 @@ import { Client, Guild, Routes } from "discord.js";
 import "colors"
 import { readdirSync } from "fs";
 import { REST } from '@discordjs/rest';
-import {SlashCommand} from "../classes/AbstractSlashCommand";
+import {Command} from "../classes/AbstractCommand";
 import {ProcessEnv} from "../interfaces/Process";
 
 
 
-export const commands = new Map<string[], SlashCommand>();
+export const commands = new Map<string, Command>();
 
 const scanCommands: Promise<typeof commands> = new Promise((resolve) => {
   readdirSync(__dirname+'/../slash/').map(async (dir: string) => {
@@ -16,10 +16,11 @@ const scanCommands: Promise<typeof commands> = new Promise((resolve) => {
         if (!cmd.endsWith('.js')) return;
         const eName = cmd.split('.')[0];
         const constructor = await import(`${__dirname}/../slash/${dir}/${cmd}`);
-        const classCommand = new constructor.default as SlashCommand;
+        const classCommand = new constructor.default as Command;
         commands.set(classCommand.name, classCommand);
         console.log('[Application]'.yellow + ` Loaded ` + eName + '.');
-      } catch {
+      } catch(e) {
+        console.log(e)
         console.log('[Application]'.red + ` Failed to load ` + cmd.red + '.');
       }
     })
@@ -32,12 +33,15 @@ export const registerSlash = async(client: Client, env: ProcessEnv) => {
     console.log('[Discord API] Started refreshing application (/) commands.'.yellow);
     const guilds = client.guilds.cache.map((guild: Guild) => guild.id);
     for (const guild of guilds) {
-        for (const [k, v] of slash.Iterate()) {
+
+        const guildCommands = slash.map((command: Command) => command.toJSON());
+        slash.map((command: Command) => {
+            console.log(command.options?.toJSON())
+        })
             await rest.put(
                 Routes.applicationGuildCommands(env.BOT_ID, guild),
-                { body: v.toJSON() },
+                { body: guildCommands },
             );
-        }
     }
     console.log('[Discord API] Successfully reloaded application (/) commands.'.green);
 

@@ -57,9 +57,28 @@ if (!Map.prototype.Iterate) {
 		}
 	};
 }
+if (!Map.prototype.map) {
+	Map.prototype.map = function (fn) {
+		const arr = [];
+		for (const [k, v] of this.Iterate()) {
+			arr.push(fn(v, k, this));
+		}
+		return arr;
+	};
+}
 if (!Set.prototype.getOrNull) {
 	Set.prototype.getOrNull = function (i) {
 		return this.entries().next().value[i] ?? null;
+	};
+}
+if (!Array.prototype.getOrNull) {
+	Array.prototype.getOrNull = function (i) {
+		return this[i] ?? null;
+	};
+}
+if (!Array.prototype.getOr) {
+	Array.prototype.getOr = function (i, def) {
+		return this[i] ?? def;
 	};
 }
 
