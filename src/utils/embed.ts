@@ -1,32 +1,16 @@
-import { EmbedBuilder } from 'discord.js';
+import {EmbedBuilder, ColorResolvable, Colors} from 'discord.js';
 
-const error = (msg: string) => new EmbedBuilder()
-  .setTitle('Error')
-  .addFields(
-	  	[
-		  	{ 
-			  name: 'Info', 
-			  value: `${msg}` 
-			}
-		]
-	)
-  .setColor(0xed4245);
-
-const success = (msg: string) => new EmbedBuilder()
-  .setTitle('Success')
-  .addFields(
-		[
-			{ 
-			name: 'Info', 
-			value: `${msg}` 
-	  	}
-	  ]
-	)
-  .setColor(0x57f287);
-
-const embedUtils = {
-  error,
-  success,
-};
-
-export default embedUtils;
+export const error = (description: string) => {
+	  return new EmbedBuilder()
+	.setTitle('Error')
+	.setDescription(description)
+	.setColor(Colors.Red)
+	.toJSON();
+}
+export const success = (description: string) => {
+	  return new EmbedBuilder()
+	.setTitle('Success')
+	.setDescription(description)
+	.setColor(Colors.Green)
+	.toJSON();
+}

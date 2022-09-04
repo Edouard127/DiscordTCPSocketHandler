@@ -1,56 +1,72 @@
-import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, Interaction, GuildMember, ButtonStyle, ActionRow, ActionRowData } from 'discord.js'
-import options from '../../etc/options/general/avatar/options'
-import embed_ from "../../utils/embed"
+import {
+	ActionRowBuilder,
+	ButtonBuilder,
+	ButtonStyle,
+	Client,
+	EmbedBuilder,
+	GuildMember,
+	Interaction,
+	MessageActionRowComponentBuilder
+} from 'discord.js'
+import * as embed from "../../utils/embed"
+import {CommandOptionType} from "../../interfaces/commands/Command";
+import {SlashCommand} from "../../classes/AbstractSlashCommand";
+import {Context} from "../../interfaces/application/Context";
 
-module.exports = {
-	options,
-	name: 'avatar',
-	description: "Get an avatar",
-	description_localizations: {
-		"en-US": "Get an avatar",
-		"fr": "Obtener un avatar",
-		"es-ES": "Conseguir un avatar",
-		"ru": "Получить аватар"
-	},
-	category: 'general',
-	run: async (interaction: Interaction) => {
-		if (!interaction.isChatInputCommand() || !interaction.inGuild() || !interaction.guild) return
-		const member = await interaction.options.getUser("user")
-		const commands = interaction.options.getSubcommand()
-		switch (commands) {
-			case "server": {
-				let icon = interaction.guild.iconURL({ size: 4096 })
-				if(!icon) return interaction.reply({ embeds: [embed_.error("This server does not have an icon")] })
+export default class Command extends SlashCommand {
+	constructor() {
+		super({
+			name: 'avatar',
+			description: "Get an avatar",
+			type: CommandOptionType.SubCommand,
+			options: [
+				{
+					name: "user",
+					description: "The user to get the avatar from",
+					type: CommandOptionType.User,
+					required: false
+				}
+			]
+		});
+		this.filePath = __filename;
+	}
 
-				const embed = new EmbedBuilder()
-					.setAuthor({ name: interaction.guild!.name, iconURL: interaction.guild?.iconURL({ size: 4096 }) ?? "https://cdn.discordapp.com/embed/avatars/0.png" })
-					.setDescription(`[Icon Link](${icon})`)
-					.setImage(icon)
-					.setFooter({ text: `Requested By ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ size: 4096 }) });
-				const row = new ActionRowBuilder().addComponents(
-					new ButtonBuilder()
-						.setStyle(ButtonStyle.Link)
-						.setURL(icon as string)
-						.setLabel('Server Icon'),
-				);
-				return interaction.reply({ embeds: [embed], components: [row as any] });
-			}
+	async run(ctx: Context): Promise<any> {
+		if (!ctx.isChatInputCommand() || !ctx.inGuild() || !ctx.isCommand()) return
+		switch (ctx.options.getSubcommand()) {
 			case "user": {
-				let icon = member?.avatarURL({ size: 4096 })
-				if(!icon) return interaction.reply({ embeds: [embed_.error("This member does not have an avatar")] })
-				const embed = new EmbedBuilder()
-					.setAuthor({ name: member?.tag ?? "Unknown", iconURL: member?.avatarURL({ size: 4096 }) ?? "https://cdn.discordapp.com/embed/avatars/0.png"  })
-					.setDescription(`[Icon Link](${icon})`)
-					.setImage(icon as string)
-					.setFooter({ text: `Requested By ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ size: 4096 }) });
-				const row = new ActionRowBuilder().addComponents(
+				const user = ctx.options.getUser("user", true);
+				let icon = user.displayAvatarURL({ size: 4096 })
+				if (!icon) return ctx.reply({ content: "This user has no avatar", ephemeral: true })
+				const embedBuilder = new EmbedBuilder()
+					.setTitle(`${user.tag}'s Avatar`)
+					.setImage(user.displayAvatarURL({ size: 4096 }))
+					.setFooter({ text: `Requested By ${ctx.user.tag}`, iconURL: ctx.user.displayAvatarURL({ size: 4096 }) });
+				let row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
 					new ButtonBuilder()
 						.setStyle(ButtonStyle.Link)
-						.setURL(icon as string)
-						.setLabel('User Avatar'),
+						.setURL(icon)
+						.setLabel('Image'),
 				);
-				return interaction.reply({ embeds: [embed], components: [row as any] });
+				return ctx.reply({ embeds: [embedBuilder], components: [row] });
+			}
+			case "server": {
+				let icon = ctx.guild.iconURL({ size: 4096 })
+				if (!icon) return ctx.reply({ content: "This server has no icon", ephemeral: true })
+				const embedBuilder = new EmbedBuilder()
+					.setTitle(`${ctx.guild.name}'s Avatar`)
+					.setImage(ctx.guild.iconURL({ size: 4096 }))
+					.setFooter({ text: `Requested By ${ctx.user.tag}`, iconURL: ctx.user.displayAvatarURL({ size: 4096 }) });
+				let row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
+					new ButtonBuilder()
+						.setStyle(ButtonStyle.Link)
+						.setURL(icon)
+						.setLabel('Image'),
+				);
+				return ctx.reply({ embeds: [embedBuilder], components: [row] });
 			}
 		}
-	},
-};
+	}
+}
+
+
