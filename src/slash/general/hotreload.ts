@@ -7,8 +7,8 @@ import AbstractCommandOptions from "../../classes/AbstractCommandOptions";
 export default class SlashCommand extends Command {
     constructor() {
         super({
-                name: 'hotreload',
-                description: "Reloads a command",
+                name: 'mixin',
+                description: "Inject code into a command",
                 options: new AbstractCommandOptions([
                     {
                         name: 'command',

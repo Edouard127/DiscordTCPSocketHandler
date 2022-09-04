@@ -28,7 +28,4 @@ export default class SlashCommand extends Command {
             .setFooter({ text: `Requested By ${ctx.user.tag}`, iconURL: ctx.user.displayAvatarURL({ size: 4096 }) });
         return ctx.reply({ embeds: [embedBuilder] });
     }
-    inject(i: SlashCommand, s: string) {
-        super.inject(i, s);
-    }
 }

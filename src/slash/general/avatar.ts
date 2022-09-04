@@ -88,9 +88,6 @@ export default class SlashCommand extends Command {
 			}
 		}
 	}
-	inject(i: SlashCommand, s: string) {
-		super.inject(i, s);
-	}
 }
 
 
