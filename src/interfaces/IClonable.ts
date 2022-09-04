@@ -1,3 +1,3 @@
 interface IClonable {
-    clone<T>(): T;
+    clone<T>(s: any): this;
 }

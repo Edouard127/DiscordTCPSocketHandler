@@ -9,7 +9,7 @@ import {
 	MessageActionRowComponentBuilder
 } from 'discord.js'
 import * as embed from "../../utils/embed"
-import {CommandOptions, CommandOptionType} from "../../interfaces/commands/Command";
+import {CommandOptions, CommandOptionType, SubCommandOptions} from "../../interfaces/commands/Command";
 import {Command} from "../../classes/AbstractCommand";
 import {Context} from "../../interfaces/application/Context";
 import AbstractCommandOptions from "../../classes/AbstractCommandOptions";
@@ -27,7 +27,7 @@ export default class SlashCommand extends Command {
 						type: CommandOptionType.SubCommand,
 						options: [
 							{
-								name: "user",
+								name: "get",
 								description: "The user to get the avatar from",
 								type: CommandOptionType.User,
 								required: true
@@ -39,12 +39,7 @@ export default class SlashCommand extends Command {
 						description: "Get the server's icon",
 						type: CommandOptionType.SubCommand,
 						options: [
-							{
-								name: "server",
-								description: "Get the server's icon",
-								type: CommandOptionType.String,
-								required: true,
-							}
+
 						]
 					}
 				])
@@ -57,7 +52,7 @@ export default class SlashCommand extends Command {
 		if (!ctx.isChatInputCommand() || !ctx.inGuild() || !ctx.isCommand()) return
 		switch (ctx.options.getSubcommand()) {
 			case "user": {
-				const user = ctx.options.getUser("user", true)
+				const user = ctx.options.getUser("get", true)
 				let icon = user.displayAvatarURL({ size: 4096 })
 				if (!icon) return ctx.reply({ content: "This user has no avatar", ephemeral: true })
 				const embedBuilder = new EmbedBuilder()

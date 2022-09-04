@@ -19,12 +19,16 @@ export class Command {
 		this.defaultPermission = <PermissionResolvable>creator.defaultPermission;
 		this.ownerOnly = <boolean>creator.ownerOnly;
 	}
-	public toJSON(): CommandData {
-			return <CommandData>{
-				name: this.name,
-				description: this.description,
-				options: this.options?.toJSON(),
-			};
+	public toJSON() {
+		return {
+			name: this.name,
+			description: this.description,
+			...this.options && {options: this.options.toJSON()},
+			filePath: this.filePath,
+			...this.timeout && {timeout: this.timeout},
+			...this.defaultPermission && {defaultPermission: this.defaultPermission},
+			...this.ownerOnly && {ownerOnly: this.ownerOnly}
+		}
 	}
 	public async run(ctx: Interaction) {
 		throw new Error(`Command ${this.name} doesn't have a run method!`);

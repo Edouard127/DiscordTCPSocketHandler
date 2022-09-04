@@ -21,6 +21,8 @@ declare global {
     interface Array<T> {
         getOrNull(i: number): T | null;
         getOr(i: number, def: T): T;
+        removeNull(): T[];
+        removeAt(i: number): T[];
     }
 
     type If<T extends any, A, B = null> = T extends any ? A : T extends null ? B : A | B;

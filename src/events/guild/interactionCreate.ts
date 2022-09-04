@@ -9,9 +9,7 @@ export default class {
   constructor(ctx: Context) {
 	  if (ctx.isChatInputCommand()) {
 		  const command = commands.getAnyOrNull(ctx.commandName)
-		  console.log(command)
 		  if(!command) return
-		  if (!ctx.guild) return;
 		  try {
 			  if (command.timeout) {
 				  if (Timeout.has(`${ctx.user.id}${command.name}`)) {

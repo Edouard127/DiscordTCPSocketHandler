@@ -1,35 +1,35 @@
-import {CommandOptions, CommandOptionType} from "../interfaces/commands/Command";
+import {CommandOptions, CommandOptionType, SubCommandOptions} from "../interfaces/commands/Command";
 import {IIndexer} from "../interfaces/IIndexer";
 
 export default class AbstractCommandOptions implements IClonable, IIndexer {
-    public name: string[] | undefined[];
-    public description: string[] | undefined[];
-    public type: (CommandOptionType | undefined)[];
-    public options?: CommandOptions[] | undefined[];
+    public name: string[];
+    public description: string[];
+    public type: CommandOptionType[];
+    public options: SubCommandOptions[]
     constructor(options: CommandOptions[]) {
-        this.name = this.get("name", options)
-        this.description = this.get("description", options);
+        this.name = this.get("name", options);
+        this.description = this.get("description", options)
         this.type = this.get("type", options);
-        this.options = this.clone();
+        this.options = this.get("options", options)[0];
+        console.log(this.options, "\n\n\n\n\n\n\n\n")
     }
-    public toJSON(): CommandOptions[] {
-        return <CommandOptions[]>Object.keys(this).map((key, index) => {
+    public toJSON() {
+        return this.name.map((name, index) => {
             return {
-                ...this.name[index] && {name: this.name[index]},
-                ...this.description[index] && {description: this.description[index]},
-                ...this.type[index] && {type: this.type[index]},
-                ...this.options?.[index] && {options: this.options[index]}
+                name,
+                description: this.description[index],
+                type: this.type[index],
+                options: this.options
             }
         })
     }
-    get<T, K extends keyof T>(key: K, options: T[]): T[K][] | undefined[] {
-        return options.map(option => option[key]);
+    get<T, K extends keyof T>(key: K, options: T[]): T[K][] {
+        return options.map((option) => option[key])
     }
-
-    clone<T>(): T {
-        return <T>JSON.parse(JSON.stringify(this));
-    };
-    ifDefined<T>(value: T[] | undefined, index: number): T | undefined {
-        return value?.[index] ?? undefined;
+    get [Symbol.toStringTag](): string {
+        return "AbstractCommandOptions";
+    }
+    clone<T>(s: any): this {
+        return <this>Object.assign(new s.constructor(), s);
     }
 }

@@ -5,7 +5,7 @@ export interface CommandOptions {
     name: string;
     description: string;
     type: CommandOptionType;
-    options?: SubCommandOptions[] | undefined;
+    options: SubCommandOptions[];
 }
 export interface SubCommandOptions {
     name: string;

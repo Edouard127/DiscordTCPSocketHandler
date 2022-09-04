@@ -81,4 +81,13 @@ if (!Array.prototype.getOr) {
 		return this[i] ?? def;
 	};
 }
-
+if (!Array.prototype.removeNull) {
+	Array.prototype.removeNull = function () {
+		return this.filter((v) => v != null);
+	};
+}
+if (!Array.prototype.removeAt) {
+	Array.prototype.removeAt = function (i) {
+		return this.splice(i, 1);
+	};
+}
