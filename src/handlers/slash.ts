@@ -43,5 +43,4 @@ export const registerSlash = async(client: Client, env: ProcessEnv) => {
             );
     }
     console.log('[Discord API] Successfully reloaded application (/) commands.'.green);
-
 }

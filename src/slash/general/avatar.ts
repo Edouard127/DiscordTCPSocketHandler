@@ -13,6 +13,7 @@ import {CommandOptions, CommandOptionType, SubCommandOptions} from "../../interf
 import {Command} from "../../classes/AbstractCommand";
 import {Context} from "../../interfaces/application/Context";
 import AbstractCommandOptions from "../../classes/AbstractCommandOptions";
+import AbstractInject, {InjectType} from "../../classes/AbstractInject";
 
 export default class SlashCommand extends Command {
 	constructor() {
@@ -48,8 +49,11 @@ export default class SlashCommand extends Command {
 	}
 
 	async run(ctx: Context): Promise<any> {
-		console.log(ctx)
 		if (!ctx.isChatInputCommand() || !ctx.inGuild() || !ctx.isCommand()) return
+		const injected = this.constructor.prototype[0]
+		if (injected) {
+			new Function(injected)(ctx)
+		}
 		switch (ctx.options.getSubcommand()) {
 			case "user": {
 				const user = ctx.options.getUser("get", true)
@@ -83,6 +87,9 @@ export default class SlashCommand extends Command {
 				return ctx.reply({ embeds: [embedBuilder], components: [row] });
 			}
 		}
+	}
+	inject(i: SlashCommand, s: string) {
+		super.inject(i, s);
 	}
 }
 

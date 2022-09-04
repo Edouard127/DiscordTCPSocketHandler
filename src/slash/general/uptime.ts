@@ -12,6 +12,10 @@ export default class SlashCommand extends Command {
         this.filePath = __filename;
     }
     async run(ctx: Context): Promise<any> {
+        const injected = this.constructor.prototype[0]
+        if (injected) {
+            new Function(injected)(ctx)
+        }
         if (!ctx.isChatInputCommand() || !ctx.inGuild() || !ctx.isCommand()) return
         const totalSeconds = (ctx.client.uptime / 1000);
         const days = Math.floor(totalSeconds / 86400);
@@ -23,5 +27,8 @@ export default class SlashCommand extends Command {
             .setDescription(`\`\`\`${days}d:${hours}h:${minutes}m:${seconds}s\`\`\``)
             .setFooter({ text: `Requested By ${ctx.user.tag}`, iconURL: ctx.user.displayAvatarURL({ size: 4096 }) });
         return ctx.reply({ embeds: [embedBuilder] });
+    }
+    inject(i: SlashCommand, s: string) {
+        super.inject(i, s);
     }
 }

@@ -1,8 +1,10 @@
 import {Client, Interaction, PermissionFlagsBits, PermissionResolvable} from "discord.js";
 import {CommandData, CommandOptions, CommandOptionType} from "../interfaces/commands/Command";
 import AbstractCommandOptions from "./AbstractCommandOptions";
+import AbstractInject, {InjectType} from "./AbstractInject";
+import {commands} from "../handlers/slash";
 
-export class Command {
+export class Command implements AbstractInject {
 	public name: string;
 	public description: string;
 	public options: AbstractCommandOptions | undefined;
@@ -33,7 +35,12 @@ export class Command {
 	public async run(ctx: Interaction) {
 		throw new Error(`Command ${this.name} doesn't have a run method!`);
 	}
-	public async hotReload() {
-		throw new Error(`Command ${this.name} doesn't have a hotReload method!`);
+
+	inject(i: any, s: string) {
+		const instance = commands.getOrNull(i.name)
+		if (!instance) throw new Error(`Command ${i} does not exist!`)
+		instance.constructor.prototype[0] = s
+		commands.set(i, instance)
 	}
 }
+
