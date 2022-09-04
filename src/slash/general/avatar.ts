@@ -25,7 +25,7 @@ export default class Command extends SlashCommand {
 						name: "user",
 						description: "The user to get the avatar from",
 						type: CommandOptionType.User,
-						required: false
+						required: true
 					},
 				]
 			},
@@ -43,7 +43,7 @@ export default class Command extends SlashCommand {
 		if (!ctx.isChatInputCommand() || !ctx.inGuild() || !ctx.isCommand()) return
 		switch (ctx.options.getSubcommand()) {
 			case "user": {
-				const user = ctx.options.getUser("user", true);
+				const user = ctx.options.getUser("user", true)
 				let icon = user.displayAvatarURL({ size: 4096 })
 				if (!icon) return ctx.reply({ content: "This user has no avatar", ephemeral: true })
 				const embedBuilder = new EmbedBuilder()

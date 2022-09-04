@@ -6,7 +6,7 @@ export class SlashCommand {
 	public description: string[];
 	public options: CommandOptions[][];
 	public filePath: string;
-	public type: CommandOptionType;
+	public type: CommandOptionType[];
 	public timeout?: number;
 	public defaultPermission: PermissionResolvable;
 	public ownerOnly: boolean = false;
@@ -15,7 +15,7 @@ export class SlashCommand {
 		this.description = creator.map((c) => c.description);
 		this.options = creator.map((c) => c.options);
 		this.filePath = <string>creator.map((c) => c.filePath)[0];
-		this.type = creator.map((c) => c.type)[0];
+		this.type = creator.map((c) => c.type);
 		this.timeout = creator.map((c) => c.timeout)[0];
 		this.defaultPermission = <PermissionResolvable>creator.map((c) => c.defaultPermission)[0];
 		this.ownerOnly = <boolean>creator.map((c) => c.ownerOnly)[0];
@@ -26,7 +26,7 @@ export class SlashCommand {
 				name: name,
 				description: this.description[i],
 				options: this.options[i],
-				type: this.type,
+				type: this.type[i],
 				timeout: this.timeout,
 				defaultPermission: this.defaultPermission,
 				ownerOnly: this.ownerOnly,
