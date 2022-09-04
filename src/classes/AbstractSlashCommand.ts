@@ -9,7 +9,7 @@ export class SlashCommand {
 	public type: CommandOptionType[];
 	public timeout?: number;
 	public defaultPermission: PermissionResolvable;
-	public ownerOnly: boolean = false;
+	public ownerOnly: boolean
 	public constructor(creator: CommandData[]) {
 		this.name = creator.map((c) => c.name);
 		this.description = creator.map((c) => c.description);
@@ -17,7 +17,7 @@ export class SlashCommand {
 		this.filePath = <string>creator.map((c) => c.filePath)[0];
 		this.type = creator.map((c) => c.type);
 		this.timeout = creator.map((c) => c.timeout)[0];
-		this.defaultPermission = <PermissionResolvable>creator.map((c) => c.defaultPermission)[0];
+		this.defaultPermission = <PermissionResolvable>creator.map((c) => c.defaultPermission);
 		this.ownerOnly = <boolean>creator.map((c) => c.ownerOnly)[0];
 	}
 	public toJSON(): CommandData[] {
@@ -35,5 +35,8 @@ export class SlashCommand {
 	}
 	public async run(ctx: Interaction) {
 		throw new Error(`Command ${this.name} doesn't have a run method!`);
+	}
+	public async hotReload() {
+		throw new Error(`Command ${this.name} doesn't have a hotReload method!`);
 	}
 }
