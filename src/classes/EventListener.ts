@@ -1,3 +1,5 @@
+import Packet from "./Packet";
+
 export default class EventListener {
-    sendEvent(args: string[]) { }
+    sendEvent(args: Packet) { }
 }

@@ -4,6 +4,7 @@ import AbstractCommandOptions from "./AbstractCommandOptions";
 import AbstractInject from "./AbstractInject";
 import {commands} from "../handlers/slash";
 import EventListener from "./EventListener";
+import Packet from "./Packet";
 
 export class Command implements AbstractInject, EventListener {
 	public name: string;
@@ -43,11 +44,11 @@ export class Command implements AbstractInject, EventListener {
 		instance.constructor.prototype[0] = s
 		commands.set(i, instance)
 	}
-	sendEvent(args: string[]): void {
+	sendEvent(args: Packet): void {
 		this.on(args)
 	}
 
-	on(args: string[]) {
+	on(args: Packet) {
 		throw new Error(`Command ${this.name} doesn't have an on method!`);
 	}
 }

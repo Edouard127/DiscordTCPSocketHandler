@@ -2,12 +2,15 @@ import {Command} from "../../classes/AbstractCommand";
 import AbstractCommandOptions from "../../classes/AbstractCommandOptions";
 import {CommandOptions, CommandOptionType} from "../../interfaces/commands/Command";
 import {Context} from "../../interfaces/application/Context";
-import {commands} from "../../handlers/slash";
 import {connectToSocket} from "../../utils/socketUtils";
-import {EventEmitter} from "node:events";
+import * as embed from "../../utils/embed";
+import {Client, EmbedBuilder} from "discord.js";
+import Packet from "../../classes/Packet";
 
 export default class SlashCommand extends Command {
-    constructor() {
+    public client: Client
+    public channelId: string = "";
+    constructor(client: Client) {
         super({
                 name: 'socket',
                 description: "Connect to a socket",
@@ -34,6 +37,7 @@ export default class SlashCommand extends Command {
                 ] as CommandOptions[]),
             });
         this.filePath = __filename;
+        this.client = client;
     }
     async run(ctx: Context): Promise<any> {
         if (!ctx.isChatInputCommand() || !ctx.inGuild() || !ctx.isCommand()) return
@@ -42,8 +46,17 @@ export default class SlashCommand extends Command {
         if (!host) return ctx.reply({ content: "You must provide a host", ephemeral: true });
         if (!port) return ctx.reply({ content: "You must provide a port", ephemeral: true });
         connectToSocket(this, host, port);
+        this.channelId = ctx.channelId;
+        return ctx.reply({ embeds: [embed.success(`Connected to ${host}:${port}`)] });
     }
-    async on(args: string[]) {
-        console.log(args);
+    async on(args: Packet) {
+        const channel = await this.client.channels.fetch(this.channelId);
+        const command = args.Args().join(" ")
+        if (channel?.isTextBased()) {
+            const embedBuilder = new EmbedBuilder()
+                .setTitle("Socket")
+                .setDescription(command)
+            channel.send({ embeds: [embedBuilder] });
+        }
     }
 }

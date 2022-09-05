@@ -11,6 +11,6 @@ export function connectToSocket(i: any, host: string, port: number) {
     })
     conn.on("data", (data) => {
         const command = Packet.fromBuffer(data)
-        console.log(command)
+        if (command) instance.sendEvent(command)
     });
 }

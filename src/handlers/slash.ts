@@ -9,26 +9,26 @@ import {ProcessEnv} from "../interfaces/Process";
 
 export const commands = new Map<string, Command>();
 
-const scanCommands: Promise<typeof commands> = new Promise((resolve) => {
-  readdirSync(__dirname+'/../slash/').map(async (dir: string) => {
-    readdirSync(__dirname+'/../slash/'+dir).map(async(cmd: string) => {
-      try {
-        if (!cmd.endsWith('.js')) return;
-        const eName = cmd.split('.')[0];
-        const constructor = await import(`${__dirname}/../slash/${dir}/${cmd}`);
-        const classCommand = new constructor.default as Command;
-        commands.set(classCommand.name, classCommand);
-        console.log('[Application]'.yellow + ` Loaded ` + eName + '.');
-      } catch(e) {
-        console.log(e)
-        console.log('[Application]'.red + ` Failed to load ` + cmd.red + '.');
-      }
-    })
-  });
-  resolve(commands);
-});
+const scanCommands: (client: Client) => Promise<typeof commands> = async(client: Client) => new Promise((resolve) => {
+        readdirSync(__dirname+'/../slash/').map(async (dir: string) => {
+            readdirSync(__dirname+'/../slash/'+dir).map(async(cmd: string) => {
+                try {
+                    if (!cmd.endsWith('.js')) return;
+                    const eName = cmd.split('.')[0];
+                    const constructor = await import(`${__dirname}/../slash/${dir}/${cmd}`);
+                    const classCommand = new constructor.default(client) as Command;
+                    commands.set(classCommand.name, classCommand);
+                    console.log('[Application]'.yellow + ` Loaded ` + eName + '.');
+                } catch(e) {
+                    console.log(e)
+                    console.log('[Application]'.red + ` Failed to load ` + cmd.red + '.');
+                }
+            })
+        });
+        resolve(commands);
+    });
 export const registerSlash = async(client: Client, env: ProcessEnv) => {
-    const slash = await scanCommands
+    const slash = await scanCommands(client);
     const rest = new REST({ version: "10" }).setToken(env.TOKEN);
     console.log('[Discord API] Started refreshing application (/) commands.'.yellow);
     const guilds = client.guilds.cache.map((guild: Guild) => guild.id);
