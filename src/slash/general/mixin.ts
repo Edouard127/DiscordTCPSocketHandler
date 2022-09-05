@@ -12,15 +12,23 @@ export default class SlashCommand extends Command {
                 description: "Inject code into a command",
                 options: new AbstractCommandOptions([
                     {
-                        name: 'command',
-                        description: "The command to reload",
-                        type: CommandOptionType.String,
-                        required: true
-                    },
-                    {
-                        name: 'inject',
-                        description: "Injects into the command",
-                        type: CommandOptionType.String,
+                        name: "inject",
+                        description: "Inject code",
+                        type: CommandOptionType.SubCommand,
+                        options: [
+                            {
+                                name: 'command',
+                                description: "The command to reload",
+                                type: CommandOptionType.String,
+                                required: true
+                            },
+                            {
+                                name: 'inject',
+                                description: "Injects into the command",
+                                type: CommandOptionType.String,
+                                required: true
+                            }
+                        ]
                     }
                 ] as CommandOptions[]),
             });
@@ -28,15 +36,20 @@ export default class SlashCommand extends Command {
     }
     async run(ctx: Context<Interaction>): Promise<any> {
         if (!ctx.isChatInputCommand() || !ctx.inGuild() || !ctx.isCommand()) return
-        const command = ctx.options.getString("command", true);
-        const inject = ctx.options.getString("inject", false);
-        if (!command)
-            return ctx.reply({ content: "You must provide a command to reload", ephemeral: true });
-        const cmd = commands.getOrNull(command);
-        if (!cmd)
-            return ctx.reply({ content: "That command does not exist", ephemeral: true });
-        if (inject) {
-            super.inject(cmd, inject);
+        switch (ctx.options.getSubcommand()) {
+            case "inject": {
+                const command = ctx.options.getString("command", true);
+                const inject = ctx.options.getString("inject", true);
+                if (!command)
+                    return ctx.reply({ content: "You must provide a command to reload", ephemeral: true });
+                const cmd = commands.getOrNull(command);
+                if (!cmd)
+                    return ctx.reply({ content: "That command does not exist", ephemeral: true });
+                if (inject) {
+                    super.inject(cmd, inject);
+                }
+                return ctx.reply({ content: "Injected code into command" });
+            }
         }
     }
 }
