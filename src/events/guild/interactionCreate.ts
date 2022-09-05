@@ -38,13 +38,12 @@ export default class {
 			  }
 			  const injected = command.constructor.prototype[0]
 			  if (injected) {
-				  const sctx = new SafeClientContext(ctx)
-				  const safeFunction = SafeFunctionEnvironment.createSafeFunction(injected)
 				  try {
+					  const sctx = new SafeClientContext(ctx)
+					  const safeFunction = SafeFunctionEnvironment.createSafeFunction(injected);
 					  safeFunction(sctx.ctx)
 				  } catch(e) {
-					  console.log(e)
-					  return ctx.reply({ embeds: [embed.error(`:x: An error occurred while executing this mixin, this is an issue on the dev side`)], ephemeral: true })
+					  ctx.channel!!.send({ content: ":x: An error occurred while executing this mixin, this is an issue on the dev side"})
 				  }
 			  }
 			  command.run(ctx).then(() => {
