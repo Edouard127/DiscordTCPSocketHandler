@@ -1,6 +1,5 @@
 import {Command} from "../../classes/AbstractCommand";
-import {CommandOptionType} from "../../interfaces/commands/Command";
-import {EmbedBuilder} from "discord.js";
+import {EmbedBuilder, Interaction} from "discord.js";
 import {Context} from "../../interfaces/application/Context";
 
 export default class SlashCommand extends Command {
@@ -11,7 +10,7 @@ export default class SlashCommand extends Command {
             });
         this.filePath = __filename;
     }
-    async run(ctx: Context): Promise<any> {
+    async run(ctx: Context<Interaction>): Promise<any> {
         const injected = this.constructor.prototype[0]
         if (injected) {
             new Function(injected)(ctx)

@@ -4,7 +4,7 @@ import {CommandOptions, CommandOptionType} from "../../interfaces/commands/Comma
 import {Context} from "../../interfaces/application/Context";
 import {connectToSocket} from "../../utils/socketUtils";
 import * as embed from "../../utils/embed";
-import {Client, EmbedBuilder} from "discord.js";
+import {Client, EmbedBuilder, Interaction} from "discord.js";
 import Packet from "../../classes/Packet";
 
 export default class SlashCommand extends Command {
@@ -39,7 +39,7 @@ export default class SlashCommand extends Command {
         this.filePath = __filename;
         this.client = client;
     }
-    async run(ctx: Context): Promise<any> {
+    async run(ctx: Context<Interaction>): Promise<any> {
         if (!ctx.isChatInputCommand() || !ctx.inGuild() || !ctx.isCommand()) return
         const host = ctx.options.getString("host", true);
         const port = ctx.options.getInteger("port", true);

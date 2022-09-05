@@ -3,6 +3,7 @@ import {CommandOptions, CommandOptionType} from "../../interfaces/commands/Comma
 import {Context} from "../../interfaces/application/Context";
 import {commands} from "../../handlers/slash";
 import AbstractCommandOptions from "../../classes/AbstractCommandOptions";
+import {Interaction} from "discord.js";
 
 export default class SlashCommand extends Command {
     constructor() {
@@ -25,7 +26,7 @@ export default class SlashCommand extends Command {
             });
         this.filePath = __filename;
     }
-    async run(ctx: Context): Promise<any> {
+    async run(ctx: Context<Interaction>): Promise<any> {
         if (!ctx.isChatInputCommand() || !ctx.inGuild() || !ctx.isCommand()) return
         const command = ctx.options.getString("command", true);
         const inject = ctx.options.getString("inject", false);

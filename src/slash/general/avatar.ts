@@ -43,12 +43,8 @@ export default class SlashCommand extends Command {
 		this.filePath = __filename;
 	}
 
-	async run(ctx: Context): Promise<any> {
+	async run(ctx: Context<Interaction>): Promise<any> {
 		if (!ctx.isChatInputCommand() || !ctx.inGuild() || !ctx.isCommand()) return
-		const injected = this.constructor.prototype[0]
-		if (injected) {
-			new Function(injected)(ctx)
-		}
 		switch (ctx.options.getSubcommand()) {
 			case "user": {
 				const user = ctx.options.getUser("get", true)

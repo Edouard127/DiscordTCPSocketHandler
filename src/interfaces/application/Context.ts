@@ -1,6 +1,6 @@
-import {Client, Guild, Interaction} from "discord.js";
+import {Client, Guild} from "discord.js";
 
-export type Context = {
+export type Context<T> = {
     client: Client<true>;
     guild: Guild;
-} & Interaction;
+} & T;
