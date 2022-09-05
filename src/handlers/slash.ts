@@ -32,9 +32,6 @@ export const registerSlash = async(client: Client, env: ProcessEnv) => {
     const rest = new REST({ version: "10" }).setToken(env.TOKEN);
     console.log('[Discord API] Started refreshing application (/) commands.'.yellow);
     const guilds = client.guilds.cache.map((guild: Guild) => guild.id);
-    slash.map((command: Command) => {
-        console.log(command.toJSON().options)
-    })
     for (const guild of guilds) {
         const guildCommands = slash.map((command: Command) => command.toJSON());
             await rest.put(
