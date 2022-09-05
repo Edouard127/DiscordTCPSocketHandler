@@ -83,26 +83,17 @@ export default class SlashCommand extends Command {
             }
         }
     }
-    async on(args: Packet | string) {
+    async on(args: Packet | null) {
         const channel = await this.client.channels.fetch(this.channelId);
-        if (args instanceof Packet) {
+        if (!channel) return;
+        if (channel.isTextBased()) {
+            if (!args) return channel.send({ embeds: [embed.error("Socket closed")] });
             const humanReadable = args.humanize();
             const str = `\`\`\`\n${humanReadable}\`\`\``;
-            if (channel?.isTextBased()) {
-                const embedBuilder = new EmbedBuilder()
-                    .setTitle("Socket")
-                    .setDescription(str)
-                channel.send({ embeds: [embedBuilder] });
-            }
-        }
-        if (typeof args === "string") {
-            const str = `\`\`\`\n${args}\`\`\``;
-            if (channel?.isTextBased()) {
-                const embedBuilder = new EmbedBuilder()
-                    .setTitle("Socket")
-                    .setDescription(str)
-                channel.send({ embeds: [embedBuilder] });
-            }
+            const embedBuilder = new EmbedBuilder()
+                .setTitle("Socket")
+                .setDescription(str)
+            channel.send({ embeds: [embedBuilder] });
         }
     }
 }

@@ -44,11 +44,11 @@ export class Command implements AbstractInject, EventListener {
 		instance.constructor.prototype[0] = s
 		commands.set(i, instance)
 	}
-	sendEvent(args: Packet): void {
+	sendEvent(args: Packet | null): void {
 		this.on(args)
 	}
 
-	on(args: Packet) {
+	on(args: Packet | null): void {
 		throw new Error(`Command ${this.name} doesn't have an on method!`);
 	}
 }
