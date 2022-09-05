@@ -6,10 +6,12 @@ import {connectToSocket} from "../../utils/socketUtils";
 import * as embed from "../../utils/embed";
 import {Client, EmbedBuilder, Interaction} from "discord.js";
 import Packet from "../../classes/Packet";
+import {Socket} from "net";
 
 export default class SlashCommand extends Command {
     public client: Client
     public channelId: string = "";
+    private socket: Socket = new Socket();
     constructor(client: Client) {
         super({
                 name: 'socket',
@@ -34,6 +36,19 @@ export default class SlashCommand extends Command {
                             }
                         ]
                     },
+                    {
+                        name: 'send',
+                        description: "Send data to the socket",
+                        type: CommandOptionType.SubCommand,
+                        options: [
+                            {
+                                name: 'data',
+                                description: "The data to send",
+                                type: CommandOptionType.String,
+                                required: true
+                            }
+                        ]
+                    }
                 ] as CommandOptions[]),
             });
         this.filePath = __filename;
@@ -41,23 +56,53 @@ export default class SlashCommand extends Command {
     }
     async run(ctx: Context<Interaction>): Promise<any> {
         if (!ctx.isChatInputCommand() || !ctx.inGuild() || !ctx.isCommand()) return
-        const host = ctx.options.getString("host", true);
-        const port = ctx.options.getInteger("port", true);
-        if (!host) return ctx.reply({ content: "You must provide a host", ephemeral: true });
-        if (!port) return ctx.reply({ content: "You must provide a port", ephemeral: true });
-        connectToSocket(this, host, port);
-        this.channelId = ctx.channelId;
-        return ctx.reply({ embeds: [embed.success(`Connected to ${host}:${port}`)] });
+        switch (ctx.options.getSubcommand()) {
+            case "connect": {
+                const host = ctx.options.getString("host", true);
+                const port = ctx.options.getInteger("port", true);
+                if (!host) return ctx.reply({ content: "You must provide a host", ephemeral: true });
+                if (!port) return ctx.reply({ content: "You must provide a port", ephemeral: true });
+                this.channelId = ctx.channelId;
+                try {
+                    await connectToSocket(this.socket, this, host, port);
+                } catch (e) {
+                    return ctx.reply({ content: "Failed to connect", ephemeral: true });
+                }
+                return ctx.reply({ embeds: [embed.success(`Connected to ${host}:${port}`)] });
+            }
+            case "send": {
+                if (!this.channelId) return ctx.reply({ content: "You must connect to a socket first", ephemeral: true });
+                const data = ctx.options.getString("data", true);
+                if (!data) return ctx.reply({ content: "You must provide data to send", ephemeral: true });
+                try {
+                    this.socket.write(data);
+                } catch (e) {
+                    return ctx.reply({ content: "Failed to send data", ephemeral: true });
+                }
+                return ctx.reply({ embeds: [embed.success(`Sent data to socket`)] });
+            }
+        }
     }
-    async on(args: Packet) {
+    async on(args: Packet | string) {
         const channel = await this.client.channels.fetch(this.channelId);
-        const humanReadable = args.humanize();
-        const str = `\`\`\`\n${humanReadable}\`\`\``;
-        if (channel?.isTextBased()) {
-            const embedBuilder = new EmbedBuilder()
-                .setTitle("Socket")
-                .setDescription(str)
-            channel.send({ embeds: [embedBuilder] });
+        if (args instanceof Packet) {
+            const humanReadable = args.humanize();
+            const str = `\`\`\`\n${humanReadable}\`\`\``;
+            if (channel?.isTextBased()) {
+                const embedBuilder = new EmbedBuilder()
+                    .setTitle("Socket")
+                    .setDescription(str)
+                channel.send({ embeds: [embedBuilder] });
+            }
+        }
+        if (typeof args === "string") {
+            const str = `\`\`\`\n${args}\`\`\``;
+            if (channel?.isTextBased()) {
+                const embedBuilder = new EmbedBuilder()
+                    .setTitle("Socket")
+                    .setDescription(str)
+                channel.send({ embeds: [embedBuilder] });
+            }
         }
     }
 }
