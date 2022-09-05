@@ -51,11 +51,12 @@ export default class SlashCommand extends Command {
     }
     async on(args: Packet) {
         const channel = await this.client.channels.fetch(this.channelId);
-        const command = args.Args().join(" ")
+        const humanReadable = args.humanize();
+        const str = `\`\`\`\n${humanReadable}\`\`\``;
         if (channel?.isTextBased()) {
             const embedBuilder = new EmbedBuilder()
                 .setTitle("Socket")
-                .setDescription(command)
+                .setDescription(str)
             channel.send({ embeds: [embedBuilder] });
         }
     }
