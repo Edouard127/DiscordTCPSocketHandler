@@ -43,7 +43,7 @@ export default class SlashCommand extends Command {
         if (!port) return ctx.reply({ content: "You must provide a port", ephemeral: true });
         connectToSocket(this, host, port);
     }
-    async on(...args: any[]) {
+    async on(args: string[]) {
         console.log(args);
     }
 }

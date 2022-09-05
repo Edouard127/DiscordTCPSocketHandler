@@ -1,10 +1,9 @@
-import {Client, Interaction, PermissionFlagsBits, PermissionResolvable} from "discord.js";
-import {CommandData, CommandOptions, CommandOptionType} from "../interfaces/commands/Command";
+import {Interaction, PermissionResolvable} from "discord.js";
+import {CommandData} from "../interfaces/commands/Command";
 import AbstractCommandOptions from "./AbstractCommandOptions";
-import AbstractInject, {InjectType} from "./AbstractInject";
+import AbstractInject from "./AbstractInject";
 import {commands} from "../handlers/slash";
 import EventListener from "./EventListener";
-import {EventEmitter} from "node:events";
 
 export class Command implements AbstractInject, EventListener {
 	public name: string;
@@ -15,7 +14,6 @@ export class Command implements AbstractInject, EventListener {
 	public defaultPermission: PermissionResolvable;
 	public ownerOnly: boolean
 	public constructor(creator: CommandData) {
-		this.registerListener(this)
 		this.name = creator.name;
 		this.description = creator.description;
 		this.options = creator.options;
@@ -45,14 +43,11 @@ export class Command implements AbstractInject, EventListener {
 		instance.constructor.prototype[0] = s
 		commands.set(i, instance)
 	}
-	sendEvent(...args: any[]): void {
-		this.on(...args)
-	}
-	registerListener(e: Command) {
-
+	sendEvent(args: string[]): void {
+		this.on(args)
 	}
 
-	on(...args: any[]) {
+	on(args: string[]) {
 		throw new Error(`Command ${this.name} doesn't have an on method!`);
 	}
 }
