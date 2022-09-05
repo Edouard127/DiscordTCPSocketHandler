@@ -5,12 +5,12 @@ export default class AbstractCommandOptions implements IClonable, IIndexer {
     public name: string[];
     public description: string[];
     public type: CommandOptionType[];
-    public options: SubCommandOptions[]
+    public options: SubCommandOptions[][]
     constructor(options: CommandOptions[]) {
         this.name = this.get("name", options);
         this.description = this.get("description", options)
         this.type = this.get("type", options);
-        this.options = this.get("options", options)[0];
+        this.options = this.get("options", options);
     }
     public toJSON() {
         return this.name.map((name, index) => {
@@ -18,7 +18,7 @@ export default class AbstractCommandOptions implements IClonable, IIndexer {
                 name,
                 description: this.description[index],
                 type: this.type[index],
-                options: this.options
+                options: this.options[index]
             }
         })
     }
