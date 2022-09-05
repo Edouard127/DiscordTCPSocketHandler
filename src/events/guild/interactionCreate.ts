@@ -11,6 +11,8 @@ import ms from 'ms'
 import * as embed from "../../utils/embed";
 import {Context} from "../../interfaces/application/Context";
 import {FilteredContext} from "../../interfaces/application/FilteredContext";
+import SafeClientContext from "../../classes/safeClientContext";
+import SafeFunctionEnvironment from "../../classes/SafeFunctionEnvironment";
 const Timeout = new Set()
 
 export default class {
@@ -36,11 +38,14 @@ export default class {
 			  }
 			  const injected = command.constructor.prototype[0]
 			  if (injected) {
-				  /** TODO: Find a way to make it work on javascript
-				   const { channel, reply } = ctx
-				   const { send } = channel!!;
-				   const x = { send, reply }*/
-				  new Function("return "+injected)()(ctx as FilteredContext<CommandInteraction, "reply" | "editReply">)
+				  const sctx = new SafeClientContext(ctx)
+				  const safeFunction = SafeFunctionEnvironment.createSafeFunction(injected)
+				  try {
+					  safeFunction(sctx.ctx)
+				  } catch(e) {
+					  console.log(e)
+					  return ctx.reply({ embeds: [embed.error(`:x: An error occurred while executing this mixin, this is an issue on the dev side`)], ephemeral: true })
+				  }
 			  }
 			  command.run(ctx).then(() => {
 				  if (command.timeout) {
@@ -51,10 +56,8 @@ export default class {
 				  }
 			  });
 		  } catch (error) {
-			  console.error(error);
 			  return ctx.reply({ content: ':x: There was an error while executing this command!', ephemeral: true });
 		  }
 	  }
   }
 }
-
