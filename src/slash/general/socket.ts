@@ -83,7 +83,7 @@ export default class SlashCommand extends Command {
             }
         }
     }
-    async on(args: Packet | null) {
+    async on(args: any | null) {
         const channel = await this.client.channels.fetch(this.channelId);
         if (!channel) return;
         if (channel.isTextBased()) {

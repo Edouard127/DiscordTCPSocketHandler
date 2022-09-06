@@ -16,7 +16,7 @@ export async function connectToSocket(conn: net.Socket, i: any, host: string, po
                 if (command) instance.sendEvent(command)
             })
             conn.on('error', () => {
-                instance.sendEvent(null)
+                instance.cancel()
             })
         })
     } catch (e) {

@@ -1,5 +1,6 @@
 import Packet from "./Packet";
 
-export default class EventListener {
-    sendEvent(args: Packet) { }
+export default interface EventListener {
+    sendEvent(args: any): void;
+    on(args: any | null): void;
 }

@@ -3,10 +3,10 @@ import {CommandData} from "../interfaces/commands/Command";
 import AbstractCommandOptions from "./AbstractCommandOptions";
 import AbstractInject from "./AbstractInject";
 import {commands} from "../handlers/slash";
-import EventListener from "./EventListener";
 import Packet from "./Packet";
+import AbstractCancallableEvent from "./AbstractCancallableEvent";
 
-export class Command implements AbstractInject, EventListener {
+export class Command implements AbstractInject, AbstractCancallableEvent {
 	public name: string;
 	public description: string;
 	public options: AbstractCommandOptions | undefined;
@@ -44,11 +44,16 @@ export class Command implements AbstractInject, EventListener {
 		instance.constructor.prototype[0] = s
 		commands.set(i, instance)
 	}
-	sendEvent(args: Packet | null): void {
+
+	sendEvent(args: any | null): void {
 		this.on(args)
 	}
 
-	on(args: Packet | null): void {
+	cancel() {
+		this.sendEvent(null)
+	}
+
+	on(args: any | null): void {
 		throw new Error(`Command ${this.name} doesn't have an on method!`);
 	}
 }
