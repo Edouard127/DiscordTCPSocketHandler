@@ -1,5 +1,5 @@
-import {Flags} from "../interfaces/Flags";
-import {Packets} from "../interfaces/Packets";
+import {Flags} from "../enums/Flags";
+import {Packets} from "../enums/Packets";
 import {ParseArgs} from "../utils/ParseArgs";
 
 export default class Packet {

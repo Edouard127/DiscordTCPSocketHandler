@@ -1,16 +1,10 @@
 import {
-	CommandInteraction,
-	EmbedBuilder,
-	GuildChannel,
-	GuildTextBasedChannel,
 	Interaction,
-	TextBasedChannel
 } from "discord.js";
 import { commands } from '../../handlers/slash'
 import ms from 'ms'
 import * as embed from "../../utils/embed";
 import {Context} from "../../interfaces/application/Context";
-import {FilteredContext} from "../../interfaces/application/FilteredContext";
 import SafeClientContext from "../../classes/safeClientContext";
 import SafeFunctionEnvironment from "../../classes/SafeFunctionEnvironment";
 const Timeout = new Set()

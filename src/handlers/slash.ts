@@ -3,7 +3,7 @@ import "colors"
 import { readdirSync } from "fs";
 import { REST } from '@discordjs/rest';
 import {Command} from "../classes/AbstractCommand";
-import {ProcessEnv} from "../interfaces/Process";
+import {ProcessEnv} from "../interfaces/IProcessEnv";
 
 
 

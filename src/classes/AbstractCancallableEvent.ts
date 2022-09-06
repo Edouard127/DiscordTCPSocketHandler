@@ -1,7 +1,7 @@
 import {ICancellable} from "../interfaces/ICancellable";
-import EventListener from "./EventListener";
+import IEventListener from "../interfaces/IEventListener";
 
-export default class AbstractCancallableEvent implements ICancellable<EventListener> {
+export default class AbstractCancallableEvent implements ICancellable<IEventListener> {
     cancel(): void {
         throw new Error("Method not implemented.");
     }

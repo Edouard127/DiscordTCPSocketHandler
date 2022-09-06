@@ -3,7 +3,7 @@ import { GatewayIntentBits } from 'discord-api-types/v10'
 import events from './handlers/events';
 import "colors"
 import {registerSlash} from "./handlers/slash";
-import {ProcessEnv} from "./interfaces/Process";
+import {ProcessEnv} from "./interfaces/IProcessEnv";
 
 const client = new Client(
 	{
@@ -29,7 +29,6 @@ client.login(process.env.TOKEN)
 client.once("ready", () => {
 	console.log('[Discord API]'.green + ` Logged in as ${client.user?.tag}.`);
 	events(client);
-	// Get the node environment variable that are not default
 	const env = {
 		TOKEN: process.env.TOKEN,
 		BOT_ID: process.env.BOT_ID

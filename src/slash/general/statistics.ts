@@ -1,7 +1,6 @@
 import {Command} from "../../classes/AbstractCommand";
 import {Context} from "../../interfaces/application/Context";
 import {EmbedBuilder, Interaction, version} from "discord.js";
-import {commands} from "../../handlers/slash";
 import os from "os"
 
 export default class SlashCommand extends Command {

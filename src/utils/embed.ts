@@ -1,4 +1,4 @@
-import {EmbedBuilder, ColorResolvable, Colors} from 'discord.js';
+import {EmbedBuilder, Colors} from 'discord.js';
 
 export const error = (description: string) => {
 	  return new EmbedBuilder()

@@ -3,7 +3,6 @@ import {CommandData} from "../interfaces/commands/Command";
 import AbstractCommandOptions from "./AbstractCommandOptions";
 import AbstractInject from "./AbstractInject";
 import {commands} from "../handlers/slash";
-import Packet from "./Packet";
 import AbstractCancallableEvent from "./AbstractCancallableEvent";
 
 export class Command implements AbstractInject, AbstractCancallableEvent {

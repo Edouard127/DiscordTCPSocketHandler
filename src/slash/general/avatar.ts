@@ -2,9 +2,7 @@ import {
 	ActionRowBuilder,
 	ButtonBuilder,
 	ButtonStyle,
-	Client,
 	EmbedBuilder,
-	GuildMember,
 	Interaction,
 	MessageActionRowComponentBuilder
 } from 'discord.js'
