@@ -45,7 +45,7 @@ export class Command implements AbstractInject, AbstractCancallableEvent {
 		commands.set(i, instance)
 	}
 
-	sendEvent(args: any | null): void {
+	sendEvent(args: any): void {
 		this.on(args)
 	}
 
@@ -53,7 +53,7 @@ export class Command implements AbstractInject, AbstractCancallableEvent {
 		this.sendEvent(null)
 	}
 
-	on(args: any | null): void {
+	on(args: any): void {
 		throw new Error(`Command ${this.name} doesn't have an on method!`);
 	}
 }
