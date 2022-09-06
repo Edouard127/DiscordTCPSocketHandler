@@ -87,7 +87,7 @@ export default class SlashCommand extends Command {
         const channel = await this.client.channels.fetch(this.channelId);
         if (!channel) return;
         if (channel.isTextBased()) {
-            if (!args) return channel.send({ embeds: [embed.error("Socket closed")] });
+            if (args !instanceof Packet) return channel.send({ embeds: [embed.error("Socket closed")] });
             const humanReadable = args.humanize();
             const str = `\`\`\`\n${humanReadable}\`\`\``;
             const embedBuilder = new EmbedBuilder()
