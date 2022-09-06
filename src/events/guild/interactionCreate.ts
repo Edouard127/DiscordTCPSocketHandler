@@ -5,7 +5,7 @@ import { commands } from '../../handlers/slash'
 import ms from 'ms'
 import * as embed from "../../utils/embed";
 import {Context} from "../../interfaces/application/Context";
-import SafeClientContext from "../../classes/safeClientContext";
+import SafeClientContext from "../../classes/SafeClientContext";
 import SafeFunctionEnvironment from "../../classes/SafeFunctionEnvironment";
 const Timeout = new Set()
 
